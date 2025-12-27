@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Descubre y relaciona los campos formativos</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  text-align: center;
+}
+
+h1 {
+  color: #2c3e50;
+}
+
+.tablero {
+  display: grid;
+  grid-template-columns: repeat(4, 150px);
+  gap: 15px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.carta {
+  height: 110px;
+  background: #1abc9c;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.carta.descubierta {
+  background: white;
+  color: #2c3e50;
+  border: 2px solid #1abc9c;
+  cursor: default;
+}
+
+.final {
+  display: none;
+  font-size: 22px;
+  color: green;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎴 Descubre y relaciona los campos formativos</h1>
+<p>Da clic en dos cartas y encuentra el par correcto</p>
+
+<div class="tablero" id="tablero"></div>
+
+<div class="final" id="final">
+  🎉 ¡Felicidades! Completaste el juego 🎉
+</div>
+
+<script>
+const cartas = [
+  { id: 1, texto: "📐 Pensamiento Matemático" },
+  { id: 1, texto: "Pensamiento Matemático" },
+
+  { id: 2, texto: "🗣️ Lengua y comunicación" },
+  { id: 2, texto: "Lengua y comunicación" },
+
+  { id: 3, texto: "🔬 Ciencias Naturales" },
+  { id: 3, texto: "Ciencias Naturales" },
+
+  { id: 4, texto: "🌍 Ciencias Sociales" },
+  { id: 4, texto: "Ciencias Sociales" },
+
+  { id: 5, texto: "💻 Cultura Digital" },
+  { id: 5, texto: "Cultura Digital" },
+
+  { id: 6, texto: "🇬🇧 Inglés" },
+  { id: 6, texto: "Inglés" },
+
+  { id: 7, texto: "🏛️ Conciencia Histórica" },
+  { id: 7, texto: "Conciencia Histórica" },
+
+  { id: 8, texto: "🤔 Pensamiento Filosófico y Humanidades" },
+  { id: 8, texto: "Pensamiento Filosófico y Humanidades" }
+];
+
+let primera = null;
+let bloqueo = false;
+let aciertos = 0;
+
+cartas.sort(() => Math.random() - 0.5);
+
+const tablero = document.getElementById("tablero");
+
+cartas.forEach(carta => {
+  const div = document.createElement("div");
+  div.className = "carta";
+  div.dataset.id = carta.id;
+  div.textContent = carta.texto;
+
+  div.addEventListener("click", () => {
+    if (bloqueo || div.classList.contains("descubierta")) return;
+
+    div.classList.add("descubierta");
+
+    if (!primera) {
+      primera = div;
+    } else {
+      if (primera.dataset.id === div.dataset.id) {
+        aciertos++;
+        primera = null;
+        if (aciertos === 8) {
+          document.getElementById("final").style.display = "block";
+        }
+      } else {
+        bloqueo = true;
+        setTimeout(() => {
+          primera.classList.remove("descubierta");
+          div.classList.remove("descubierta");
+          primera = null;
+          bloqueo = false;
+        }, 1000);
+      }
+    }
+  });
+
+  tablero.appendChild(div);
+});
+</script>
+
+</body>
+</html>
